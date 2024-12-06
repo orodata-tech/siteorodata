@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capturar Localização</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    #location {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Capturar Localização Atual</h2>
+  <button onclick="getLocation()">Capturar Localização</button>
+  <p id="location"></p>
+
+  <script>
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+      } else {
+        document.getElementById("location").innerHTML = "Geolocalização não suportada.";
+      }
+    }
+
+    function showPosition(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      document.getElementById("location").innerHTML = 
+        `Latitude: ${latitude}<br>Longitude: ${longitude}`;
+      // Aqui você poderia usar um webhook para enviar a localização ao Google Forms ou Google Sheets
+      sendToGoogleForms(latitude, longitude);
+    }
+
+    function showError(error) {
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+          alert("Usuário negou a solicitação de Geolocalização.");
+          break;
+        case error.POSITION_UNAVAILABLE:
+          alert("Informações de localização não estão disponíveis.");
+          break;
+        case error.TIMEOUT:
+          alert("A solicitação expirou.");
+          break;
+        case error.UNKNOWN_ERROR:
+          alert("Ocorreu um erro desconhecido.");
+          break;
+      }
+    }
+
+    // Função para enviar dados para o Google Forms ou Google Sheets via Webhook
+    function sendToGoogleForms(latitude, longitude) {
+      const formUrl = "https://script.google.com/macros/s/YOUR_SCRIPT_URL/exec"; // Substitua com seu URL de Webhook do Google Apps Script
+
+      fetch(formUrl, {
+        method: "POST",
+        body: JSON.stringify({ latitude, longitude }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(response => {
+        if (response.ok) {
+          alert("Localização enviada com sucesso!");
+        } else {
+          alert("Erro ao enviar localização.");
+        }
+      });
+    }
+  </script>
+</body>
+</html>
