@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ORODATA - Relatório de Pulverização</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 90%;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 0.9em;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #resumoConteudo p {
+      margin: 10px 0;
+    }
+
+    /* Responsividade */
+    @media (min-width: 768px) {
+      .container {
+        max-width: 600px;
+      }
+
+      input, select, button {
+        font-size: 1em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1, h2 {
+        font-size: 1.4em;
+      }
+
+      button {
+        font-size: 0.9em;
+      }
+
+      label {
+        font-size: 0.8em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Relatório de Pulverização</h1>
+    <form id="pulverizacaoForm">
+      <label for="data">Data:</label>
+      <input type="date" id="data" required>
+
+      <label for="cultura">Cultura:</label>
+      <input type="text" id="cultura" placeholder="Descreva a cultura" required>
+
+      <label for="nomeArea">Nome da Área:</label>
+      <input type="text" id="nomeArea" required>
+
+      <label for="codigoArea">Código da Área:</label>
+      <input type="text" id="codigoArea" required>
+
+      <label for="hectares">Quantidade de Hectares:</label>
+      <input type="number" id="hectares" step="0.01" required>
+
+      <label for="equipamento">Equipamento:</label>
+      <select id="equipamento" required>
+        <option value="T20">T20</option>
+        <option value="T25">T25</option>
+        <option value="T40">T40</option>
+        <option value="T50">T50</option>
+      </select>
+
+      <label for="vazao">Vazão (L/ha):</label>
+      <input type="number" id="vazao" required>
+
+      <label for="faixaAplicacao">Faixa de Aplicação (m):</label>
+      <input type="number" id="faixaAplicacao" required>
+
+      <label for="alturaVoo">Altura de Voo (m):</label>
+      <input type="number" id="alturaVoo" required>
+
+      <label for="dosagem">Dosagem do Produto e Nome:</label>
+      <input type="text" id="dosagem" required>
+
+      <label for="horaInicial">Horário Inicial:</label>
+      <input type="time" id="horaInicial" required>
+
+      <label for="horaFinal">Horário Final:</label>
+      <input type="time" id="horaFinal" required>
+
+      <label for="temperatura">Temperatura (°C):</label>
+      <input type="number" id="temperatura" required>
+
+      <label for="umidade">Umidade (%):</label>
+      <input type="number" id="umidade" required>
+
+      <label for="direcaoVento">Direção do Vento:</label>
+      <input type="text" id="direcaoVento" required>
+
+      <label for="velocidadeVento">Velocidade do Vento (km/h):</label>
+      <input type="number" id="velocidadeVento" required>
+
+      <label for="deltaT">Delta T:</label>
+      <input type="number" id="deltaT" step="0.01" required>
+
+      <label for="foto">Adicionar Foto:</label>
+      <input type="file" id="foto" accept="image/*">
+
+      <button type="button" id="capturarLocalizacao">Capturar Localização</button>
+      <p id="localizacaoResultado"></p>
+
+      <button type="button" onclick="mostrarResumo()">Resumo do Relatório</button>
+    </form>
+
+    <div id="resumo" class="hidden">
+      <h2>Resumo do Relatório</h2>
+      <div id="resumoConteudo"></div>
+      <button type="button" onclick="editarFormulario()">Editar</button>
+      <button type="button" onclick="salvarRelatorio()">Salvar Relatório</button>
+    </div>
+  </div>
+
+  <script>
+    function mostrarResumo() {
+      const form = document.getElementById('pulverizacaoForm');
+      const resumo = document.getElementById('resumo');
+      const resumoConteudo = document.getElementById('resumoConteudo');
+
+      const dados = new FormData(form);
+      resumoConteudo.innerHTML = '';
+
+      for (let [key, value] of dados.entries()) {
+        resumoConteudo.innerHTML += `<p><strong>${key}:</strong> ${value}</p>`;
+      }
+
+      form.classList.add('hidden');
+      resumo.classList.remove('hidden');
+    }
+
+    function editarFormulario() {
+      document.getElementById('pulverizacaoForm').classList.remove('hidden');
+      document.getElementById('resumo').classList.add('hidden');
+    }
+
+    function salvarRelatorio() {
+      alert('Relatório salvo com sucesso!');
+    }
+
+    document.getElementById('capturarLocalizacao').addEventListener('click', () => {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        document.getElementById('localizacaoResultado').innerText = `Lat: ${latitude}, Lng: ${longitude}`;
+      }, (error) => {
+        alert('Erro ao capturar localização.');
+      });
+    });
+  </script>
+</body>
+</html>

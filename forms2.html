@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ORODATA - Informações de Combustível</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 90%;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 0.9em;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #resumoConteudo p {
+      margin: 10px 0;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        max-width: 600px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1, h2 {
+        font-size: 1.4em;
+      }
+
+      button {
+        font-size: 0.9em;
+      }
+
+      label {
+        font-size: 0.8em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Informações de Combustível</h1>
+    <form id="combustivelForm">
+      <label for="km">Quilometragem (km):</label>
+      <input type="number" id="km" placeholder="Digite a quilometragem" required>
+
+      <label for="precoCombustivel">Preço do Combustível (R$):</label>
+      <input type="number" id="precoCombustivel" step="0.01" placeholder="Digite o preço" required>
+
+      <label for="fotoNota">Foto da Nota Fiscal:</label>
+      <input type="file" id="fotoNota" accept="image/*">
+
+      <button type="button" onclick="mostrarResumo()">Resumo</button>
+    </form>
+
+    <div id="resumo" class="hidden">
+      <h2>Resumo das Informações</h2>
+      <div id="resumoConteudo"></div>
+      <button type="button" onclick="editarFormulario()">Editar</button>
+      <button type="button" onclick="salvarRelatorio()">Salvar</button>
+    </div>
+  </div>
+
+  <script>
+    function mostrarResumo() {
+      const form = document.getElementById('combustivelForm');
+      const resumo = document.getElementById('resumo');
+      const resumoConteudo = document.getElementById('resumoConteudo');
+
+      const dados = new FormData(form);
+      resumoConteudo.innerHTML = '';
+
+      for (let [key, value] of dados.entries()) {
+        if (key !== 'fotoNota') {
+          resumoConteudo.innerHTML += `<p><strong>${key}:</strong> ${value}</p>`;
+        } else {
+          resumoConteudo.innerHTML += `<p><strong>${key}:</strong> Foto anexada</p>`;
+        }
+      }
+
+      form.classList.add('hidden');
+      resumo.classList.remove('hidden');
+    }
+
+    function editarFormulario() {
+      document.getElementById('combustivelForm').classList.remove('hidden');
+      document.getElementById('resumo').classList.add('hidden');
+    }
+
+    function salvarRelatorio() {
+      alert('Informações de combustível salvas com sucesso!');
+    }
+  </script>
+</body>
+</html>
